@@ -102,5 +102,67 @@ mod test {
         }
     }
 
+    #[test]
+    fn test_read_from_str() {
+        let obmol = ob::OBMol_new();
+        let obconv = ob::OBConversion_new();
+        let input_str = "2
 
+Au      0.020000    0.000000    0.000000
+Au      1.442498    2.498480    0.000000";
+        cxx::let_cxx_string!(input = input_str);
+        cxx::let_cxx_string!(input_format = "xyz");
+        let result = ob::OBConversion_set_in_format(&obconv, &input_format);
+        assert_eq!(result, 0, "unable to set input format");
+
+        let result = ob::OBConversion_read_string(&obconv, &obmol, &input);
+        assert_eq!(result, 0, "unable to read molecule");
+
+        assert_eq!(ob::OBMol_num_atoms(&obmol), 2, "wrong number of atoms");
+    }
+
+    #[test]
+    fn test_write_to_str() {
+        let obmol = ob::OBMol_new();
+        let obconv = ob::OBConversion_new();
+        let input_str = "2
+
+Au      0.020000    0.000000    0.000000
+Au      1.442498    2.498480    0.000000";
+        cxx::let_cxx_string!(input = input_str);
+
+        // set input and output format separately
+        cxx::let_cxx_string!(input_format = "xyz");
+        let result = ob::OBConversion_set_in_format(&obconv, &input_format);
+        assert_eq!(result, 0, "unable to set input format");
+
+        cxx::let_cxx_string!(output_format = "smi");
+        let result = ob::OBConversion_set_out_format(&obconv, &output_format);
+        assert_eq!(result, 0, "unable to set output format");
+
+        let result = ob::OBConversion_read_string(&obconv, &obmol, &input);
+        assert_eq!(result, 0, "unable to read molecule");
+
+        let result_str = ob::OBConversion_write_string(&obconv, &obmol);
+        assert_eq!("[Au][Au]\t\n", result_str, "output string did not match expected");
+
+        // set input and output format at the same time
+        let result = ob::OBConversion_set_in_and_out_formats(&obconv, &input_format, &output_format);
+        assert_eq!(result, 0, "unable to set input and output format");
+
+        let result = ob::OBConversion_read_string(&obconv, &obmol, &input);
+        assert_eq!(result, 0, "unable to read molecule");
+
+        let result_str = ob::OBConversion_write_string(&obconv, &obmol);
+        assert_eq!("[Au][Au]\t\n", result_str, "output string did not match expected");
+    }
+
+    #[test]
+    fn test_supported_formats() {
+        let supported_formats = ob::OBConversion_get_supported_input_format();
+        assert_eq!(supported_formats.len(), 22, "wrong amount of supported input formats");
+
+        let supported_formats = ob::OBConversion_get_supported_output_format();
+        assert_eq!(supported_formats.len(), 15, "wrong amount of supported output formats");
+    }
 }
