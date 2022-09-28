@@ -3,6 +3,7 @@
 #include <openbabel/fingerprint.h>
 #include <openbabel/oberror.h>
 #include <openbabel/obconversion.h>
+#include <openbabel/forcefield.h>
 #include "wrapper.h"
 
 namespace OpenBabel {
@@ -20,6 +21,58 @@ namespace OpenBabel {
 // }
 
 // OBConversion - End
+
+// OBForceField
+OBForceField* OBForceField_find_forcefield(const std::string &ff_name) {
+    OBForceField* pFF = OBForceField::FindForceField(ff_name.c_str());
+
+    if (!pFF) {
+        std::stringstream errorMsg;
+	errorMsg << "OBForceField::FindForceField error" << std::endl;
+	obErrorLog.ThrowError(__FUNCTION__, errorMsg.str(), obError);
+    }
+
+    return pFF;
+}
+
+unsigned int OBForceField_setup(const std::unique_ptr<OBMol> & pMol, OBForceField* pFF) {
+    if (!pFF->Setup(*pMol)) {
+        std::stringstream errorMsg;
+	errorMsg << "OBForceField->Setup() error" << std::endl;
+	obErrorLog.ThrowError(__FUNCTION__, errorMsg.str(), obError);
+	return 1;
+    }
+    return 0;
+}
+
+void OBForceField_conjugate_gradients(OBForceField* pFF, u_int32_t steps, double econv) {
+    pFF->ConjugateGradients(steps, econv);
+}
+
+void OBForceField_conjugate_gradients_initialize(OBForceField* pFF, u_int32_t steps, double econv) {
+    pFF->ConjugateGradientsInitialize(steps, econv);
+}
+
+bool OBForceField_conjugate_gradients_take_n_steps(OBForceField* pFF, u_int32_t n) {
+    return pFF->ConjugateGradientsTakeNSteps(n);
+}
+
+void OBForceField_steepest_descent(OBForceField* pFF, u_int32_t steps, double econv) {
+    pFF->SteepestDescent(steps, econv);
+}
+
+void OBForceField_steepest_descent_initialize(OBForceField* pFF, u_int32_t steps, double econv) {
+    pFF->SteepestDescentInitialize(steps, econv);
+}
+
+bool OBForceField_steepest_descent_take_n_steps(OBForceField* pFF, u_int32_t n) {
+    return pFF->SteepestDescentTakeNSteps(n);
+}
+
+double OBForceField_energy(OBForceField* pFF) { return pFF->Energy(); }
+const std::string OBForceField_get_unit(OBForceField* pFF) { return pFF->GetUnit(); }
+
+// OBForceField End
 
 
 // OBMol

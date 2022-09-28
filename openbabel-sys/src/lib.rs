@@ -8,6 +8,14 @@
 //! OBMol_num_hvy_atoms <-> OBMol::NumHvyAtoms
 //! OBMol_get_mol_wt <-> OBMol::GetMolWt
 //!
+//!
+//! OBForceField
+//! ------------
+//! OBForceField_setup <-> OBForceField::Setup
+//! OBForceField_conjugate_gradients <-> OBForceField::ConjugateGradients
+//! OBForceField_conjugate_gradients_initialize <-> OBForceField::ConjugateGradientsInitialize
+//! OBForceField_conjugate_gradients_take_n_steps <-> OBForceField::ConjugateGradientsTakeNSteps
+//! OBForceField_energy <-> OBForceField::Energy
 //! 
 //!  
 //! OBFingerprint
@@ -31,12 +39,24 @@ pub mod ob {
         include!("openbabel-sys/src/wrapper.h");
         type OBMol;
         type OBSmartsPattern;
+        type OBForceField;
 
         // Debug
         fn print_global_instances();
 
         // OBConversion
         // fn OBConversion_smi_to_mol(smiles: &CxxString) -> UniquePtr<OBMol>;
+
+        // OBForceField
+        fn OBForceField_find_forcefield(ff_name: &CxxString) -> *mut OBForceField;
+        unsafe fn OBForceField_setup(mol: &UniquePtr<OBMol>, pFF: *mut OBForceField) -> u32;
+        unsafe fn OBForceField_conjugate_gradients(pFF: *mut OBForceField, steps: u32, econv: f64);
+        unsafe fn OBForceField_conjugate_gradients_initialize(pFF: *mut OBForceField, steps: u32, econv: f64);
+        unsafe fn OBForceField_conjugate_gradients_take_n_steps(pFF: *mut OBForceField, n: u32) -> bool;
+        unsafe fn OBForceField_steepest_descent(pFF: *mut OBForceField, steps: u32, econv: f64);
+        unsafe fn OBForceField_steepest_descent_initialize(pFF: *mut OBForceField, steps: u32, econv: f64);
+        unsafe fn OBForceField_steepest_descent_take_n_steps(pFF: *mut OBForceField, n: u32) -> bool;
+        unsafe fn OBForceField_energy(pFF: *mut OBForceField) -> f64;
 
         // OBMol
         fn OBMol_from_smiles(smiles: &CxxString) -> UniquePtr<OBMol>;

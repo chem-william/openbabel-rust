@@ -65,4 +65,42 @@ mod test {
             assert_eq!(match_cxx_vec.as_slice(), match_indexes);
         }
     }
+
+    #[test]
+    fn test_conjugate_gradient() {
+        cxx::let_cxx_string!(ff_name = "mmff94");
+        let ff = ob::OBForceField_find_forcefield(&ff_name);
+
+        cxx::let_cxx_string!(smiles = "cc");
+        let mol = ob::OBMol_from_smiles(&smiles);
+
+        unsafe {
+            ob::OBForceField_setup(&mol, ff);
+            assert!(ob::OBForceField_energy(ff) > 4000.0);
+
+            ob::OBForceField_conjugate_gradients_initialize(ff, 100, 1e-5);
+            assert!(ob::OBForceField_conjugate_gradients_take_n_steps(ff, 10) == false);
+            assert!(ob::OBForceField_energy(ff) < 0.01);
+        }
+    }
+
+    #[test]
+    fn test_steepest_descent() {
+        cxx::let_cxx_string!(ff_name = "mmff94");
+        let ff = ob::OBForceField_find_forcefield(&ff_name);
+
+        cxx::let_cxx_string!(smiles = "cc");
+        let mol = ob::OBMol_from_smiles(&smiles);
+
+        unsafe {
+            ob::OBForceField_setup(&mol, ff);
+            assert!(ob::OBForceField_energy(ff) > 4000.0);
+
+            ob::OBForceField_steepest_descent_initialize(ff, 100, 1e-5);
+            assert!(ob::OBForceField_steepest_descent_take_n_steps(ff, 10) == false);
+            assert!(ob::OBForceField_energy(ff) < 0.01);
+        }
+    }
+
+
 }

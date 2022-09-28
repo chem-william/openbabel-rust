@@ -4,17 +4,32 @@
 #include <openbabel/mol.h>
 #include <openbabel/parsmart.h>
 #include <openbabel/obconversion.h>
+#include <openbabel/forcefield.h>
 
 namespace OpenBabel {
     class OBMol;
     class OBSmartsPattern;
     class OBConversion;
+    class OBForceField;
 
     // Debug
     void print_global_instances();
 
     // OBConversion
     // std::unique_ptr<OBMol> OBConversion_smi_to_mol(const std::string &smiles);
+
+    // OBForceField
+    OBForceField* OBForceField_find_forcefield(const std::string &ff_name);
+    unsigned int OBForceField_setup(const std::unique_ptr<OBMol> & pMol, OBForceField* pFF);
+    void OBForceField_conjugate_gradients(OBForceField* pFF, u_int32_t steps, double econv);
+    void OBForceField_conjugate_gradients_initialize(OBForceField* pFF, u_int32_t steps, double econv);
+    bool OBForceField_conjugate_gradients_take_n_steps(OBForceField* pFF, u_int32_t n);
+
+    void OBForceField_steepest_descent(OBForceField* pFF, u_int32_t steps, double econv);
+    void OBForceField_steepest_descent_initialize(OBForceField* pFF, u_int32_t steps, double econv);
+    bool OBForceField_steepest_descent_take_n_steps(OBForceField* pFF, u_int32_t n);
+    double OBForceField_energy(OBForceField* pFF);
+
 
     // OBMol
     std::unique_ptr<OBMol> OBMol_from_smiles(const std::string &smiles);
