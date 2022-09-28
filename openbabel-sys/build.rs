@@ -103,6 +103,7 @@ fn main() {
         .file("openbabel/src/formats/siestaformat.cpp")
         .file("openbabel/src/griddata.cpp")
         .file("openbabel/src/grid.cpp")
+        .file("openbabel/src/rotor.cpp")
         .file("openbabel/src/fingerprint.cpp")
         .file("openbabel/src/fingerprints/finger2.cpp")
         .file("openbabel/src/fingerprints/finger3.cpp")

@@ -184,6 +184,22 @@ unique_ptr<OBMol> OBMol_from_smiles(const string &smiles) {
 unsigned int OBMol_num_atoms(const unique_ptr<OBMol> & pMol) { return pMol->NumAtoms(); }
 unsigned int OBMol_num_bonds(const unique_ptr<OBMol> & pMol) { return pMol->NumBonds(); }
 unsigned int OBMol_num_hvy_atoms(const unique_ptr<OBMol> & pMol) { return pMol->NumHvyAtoms(); }
+unsigned int OBMol_num_rotors(const unique_ptr<OBMol> & pMol) { return pMol->NumRotors(); }
+rust::String OBMol_get_formula(const unique_ptr<OBMol> & pMol) { return pMol->GetFormula(); }
+double OBMol_get_energy(const unique_ptr<OBMol> & pMol) { return pMol->GetEnergy(); }
+rust::Vec<double> OBMol_get_coordinates(const unique_ptr<OBMol> & pMol) {
+    double* coords = pMol->GetCoordinates();
+    unsigned int num_atoms = pMol->NumAtoms();
+    rust::Vec<double> result {};
+
+    for (unsigned int i = 0; i < num_atoms; i++) {
+	for (unsigned int d = 0; d < 3; d++) {
+	    result.push_back(coords[3*i + d]);
+	}
+    }
+    return result;
+}
+    
 double OBMol_get_mol_wt(const unique_ptr<OBMol> & pMol) { return pMol->GetMolWt(); }
 
 // OBMol End

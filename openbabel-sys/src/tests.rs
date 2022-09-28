@@ -165,4 +165,56 @@ Au      1.442498    2.498480    0.000000";
         let supported_formats = ob::OBConversion_get_supported_output_format();
         assert_eq!(supported_formats.len(), 15, "wrong amount of supported output formats");
     }
+
+    #[test]
+    fn test_formula() {
+        let obmol = ob::OBMol_new();
+        let obconv = ob::OBConversion_new();
+        let input_str = "5
+
+C     -0.74750    0.02136   -0.00000
+H      0.05249   -0.22702    0.66574
+H     -0.42490    0.78569   -0.67574
+H     -1.03279   -0.84799   -0.55475
+H     -1.58481    0.37474    0.56475";
+
+        cxx::let_cxx_string!(input = input_str);
+        cxx::let_cxx_string!(input_format = "xyz");
+
+        let result = ob::OBConversion_set_in_format(&obconv, &input_format);
+        assert_eq!(result, 0, "unable to set input format");
+
+        let result = ob::OBConversion_read_string(&obconv, &obmol, &input);
+        assert_eq!(result, 0, "unable to read molecule");
+
+        assert_eq!(ob::OBMol_get_formula(&obmol), "CH4", "wrong chemical formula");
+    }
+
+    #[test]
+    fn test_get_coordinates() {
+        let obmol = ob::OBMol_new();
+        let obconv = ob::OBConversion_new();
+        let input_str = "5
+
+C     -0.74750    0.02136   -0.00000
+H      0.05249   -0.22702    0.66574
+H     -0.42490    0.78569   -0.67574
+H     -1.03279   -0.84799   -0.55475
+H     -1.58481    0.37474    0.56475";
+
+        cxx::let_cxx_string!(input = input_str);
+        cxx::let_cxx_string!(input_format = "xyz");
+
+        let result = ob::OBConversion_set_in_format(&obconv, &input_format);
+        assert_eq!(result, 0, "unable to set input format");
+
+        let result = ob::OBConversion_read_string(&obconv, &obmol, &input);
+        assert_eq!(result, 0, "unable to read molecule");
+
+        let correct_coords = vec![-0.7475, 0.02136, -0.0, 0.05249, -0.22702, 0.66574, -0.4249, 0.78569, -0.67574, -1.03279, -0.84799, -0.55475, -1.58481, 0.37474, 0.56475];
+        let ob_coordinates = ob::OBMol_get_coordinates(&obmol);
+        let matching = correct_coords.iter().zip(&ob_coordinates).filter(|&(a, b)| a == b).count();
+
+        assert_eq!(matching, 15, "read coordinates wrong");
+    }
 }

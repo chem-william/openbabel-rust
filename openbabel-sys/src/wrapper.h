@@ -49,6 +49,11 @@ namespace OpenBabel {
     unsigned int OBMol_num_bonds(const unique_ptr<OBMol> & pMol);
     unsigned int OBMol_num_hvy_atoms(const unique_ptr<OBMol> & pMol);
     double OBMol_get_mol_wt(const unique_ptr<OBMol> & pMol);
+    unsigned int OBMol_num_rotors(const unique_ptr<OBMol> & pMol);
+    rust::String OBMol_get_formula(const unique_ptr<OBMol> & pMol);
+    double OBMol_get_energy(const unique_ptr<OBMol> & pMol);
+    rust::Vec<double> OBMol_get_coordinates(const unique_ptr<OBMol> & pMol);
+
 
     // OBFingerprint
     typedef vector<unsigned int> FPData;

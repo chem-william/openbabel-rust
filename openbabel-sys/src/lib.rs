@@ -88,6 +88,10 @@ pub mod ob {
         fn OBMol_num_bonds(mol: &UniquePtr<OBMol>) -> u32;
         fn OBMol_num_hvy_atoms(mol: &UniquePtr<OBMol>) -> u32;
         fn OBMol_get_mol_wt(mol: &UniquePtr<OBMol>) -> f64;
+        fn OBMol_num_rotors(mol: &UniquePtr<OBMol>) -> u32;
+        fn OBMol_get_formula(mol: &UniquePtr<OBMol>) -> String;
+        fn OBMol_get_energy(mol: &UniquePtr<OBMol>) -> f64;
+        fn OBMol_get_coordinates(mol: &UniquePtr<OBMol>) -> Vec<f64>;
 
         // OBFingerprint
         fn OBFingerprint_get_fingerprint(fp_name: &CxxString, mol: &UniquePtr<OBMol>, nbits: u32) -> UniquePtr<CxxVector<u32>>;
