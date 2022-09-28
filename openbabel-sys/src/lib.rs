@@ -20,14 +20,22 @@
 //! OBMol_num_bonds <-> OBMol::NumBonds
 //! OBMol_num_hvy_atoms <-> OBMol::NumHvyAtoms
 //! OBMol_get_mol_wt <-> OBMol::GetMolWt
+//! OBMol_num_rotors <-> OBMol::NumRotors
+//! OBMol_get_formula <-> OBMol::GetFormula
+//! OBMol_get_energy <-> OBMol::GetEnergy
+//! OBMol_get_coordinates <-> OBMol::GetCoordinates
 //! 
 //!
 //! OBForceField
 //! ------------
+//! OBForceField_find_forcefield <-> OBForceField::FindForceField
 //! OBForceField_setup <-> OBForceField::Setup
 //! OBForceField_conjugate_gradients <-> OBForceField::ConjugateGradients
 //! OBForceField_conjugate_gradients_initialize <-> OBForceField::ConjugateGradientsInitialize
 //! OBForceField_conjugate_gradients_take_n_steps <-> OBForceField::ConjugateGradientsTakeNSteps
+//! OBForceField_steepest_descent <-> OBForceField::SteepestDescent
+//! OBForceField_steepest_descent_initialize <-> OBForceField::SteepestDescentInitialize
+//! OBForceField_steepest_descent_take_n_steps <-> OBForceField::SteepestDescentTakeNSteps
 //! OBForceField_energy <-> OBForceField::Energy
 //! 
 //!  
