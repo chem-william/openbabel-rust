@@ -13,14 +13,20 @@ fn main() {
     if !std::path::Path::new("openbabel/.git").exists() {
         let _ = std::process::Command::new("git")
             .args(&["submodule", "update", "--init"])
-            .status().unwrap();
+            .status()
+            .unwrap();
     }
 
     // copy data directory
     let data_ob = dst.join("data").join(&version);
     if !data_ob.exists() {
         std::fs::create_dir_all(&data_ob).unwrap();
-        fs_extra::dir::copy("src/data", data_ob.to_str().unwrap(), &fs_extra::dir::CopyOptions::new()).unwrap();
+        fs_extra::dir::copy(
+            "src/data",
+            data_ob.to_str().unwrap(),
+            &fs_extra::dir::CopyOptions::new(),
+        )
+        .unwrap();
     }
 
     // babelconfig.h
@@ -35,14 +41,15 @@ fn main() {
             .replace("@BABEL_DATADIR@", data_ob.to_str().unwrap())
             .replace("@BABEL_VERSION@", &version)
             .replace("@MODULE_EXTENSION@", "na")
-            .replace("@OB_MODULE_PATH@", "na") 
+            .replace("@OB_MODULE_PATH@", "na")
             .replace("#cmakedefine HAVE_CONIO_H 1", "")
             .replace("#cmakedefine HAVE_SRANDDEV 1", "")
             .replace("#cmakedefine SCANDIR_NEEDS_CONST 1", "")
             .replace("#cmakedefine", "#define")
             .replace("@OB_SHARED_PTR_IMPLEMENTATION@", "std::shared_ptr")
-            .replace("@OB_SHARED_PTR_HEADER@", "memory")
-    ).unwrap();
+            .replace("@OB_SHARED_PTR_HEADER@", "memory"),
+    )
+    .unwrap();
 
     // Compiling
     cxx_build::bridge("src/lib.rs")
@@ -115,7 +122,6 @@ fn main() {
         // .file("openbabel/src/forcefields/forcefieldmm2.cpp")  // compilation error when added
         .file("openbabel/src/forcefield.cpp")
         .file("openbabel/src/molchrg.cpp")
-
         .file("src/wrapper.cpp")
         .include(include)
         .include("src")
@@ -135,7 +141,7 @@ fn main() {
         // .flag("-Wno-c++11-extensions")
         .compile("openbabel");
 
-        println!("cargo:rerun-if-changed=src/lib.rs");
-        println!("cargo:rerun-if-changed=src/wrapper.h");
-        println!("cargo:rerun-if-changed=src/wrapper.cpp");
+    println!("cargo:rerun-if-changed=src/lib.rs");
+    println!("cargo:rerun-if-changed=src/wrapper.h");
+    println!("cargo:rerun-if-changed=src/wrapper.cpp");
 }

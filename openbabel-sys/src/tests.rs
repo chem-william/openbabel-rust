@@ -1,9 +1,8 @@
 //!
 //! Test cases for OpenBabel Wrapper
 //!
-//! Only support single-thread 
+//! Only support single-thread
 //! cargo test -- --test-threads=1
-
 
 #[cfg(test)]
 mod test {
@@ -16,7 +15,7 @@ mod test {
         };
     }
 
-    # [test]
+    #[test]
     fn test_mol() {
         let test_data: Vec<(String, (u32, u32, u32, f64))> = vec![
             (String::from("c1ccccc1N"), (7, 7, 7, 93.126)),
@@ -37,9 +36,8 @@ mod test {
         cxx::let_cxx_string!(smiles = "c1ccccc1");
         let mol = ob::OBMol_from_smiles(&smiles);
         for fp_name in vec![
-            "FP2", "FP3", "FP4",
-            "ECFP0", "ECFP2", "ECFP4", "ECFP6", "ECFP8", "ECFP10",
-            ] {
+            "FP2", "FP3", "FP4", "ECFP0", "ECFP2", "ECFP4", "ECFP6", "ECFP8", "ECFP10",
+        ] {
             cxx::let_cxx_string!(name = fp_name);
             let p_data = ob::OBFingerprint_get_fingerprint(&name, &mol, 4096);
             assert_eq!(p_data.as_ref().unwrap().len(), 128);
@@ -144,26 +142,41 @@ Au      1.442498    2.498480    0.000000";
         assert_eq!(result, 0, "unable to read molecule");
 
         let result_str = ob::OBConversion_write_string(&obconv, &obmol);
-        assert_eq!("[Au][Au]\t\n", result_str, "output string did not match expected");
+        assert_eq!(
+            "[Au][Au]\t\n", result_str,
+            "output string did not match expected"
+        );
 
         // set input and output format at the same time
-        let result = ob::OBConversion_set_in_and_out_formats(&obconv, &input_format, &output_format);
+        let result =
+            ob::OBConversion_set_in_and_out_formats(&obconv, &input_format, &output_format);
         assert_eq!(result, 0, "unable to set input and output format");
 
         let result = ob::OBConversion_read_string(&obconv, &obmol, &input);
         assert_eq!(result, 0, "unable to read molecule");
 
         let result_str = ob::OBConversion_write_string(&obconv, &obmol);
-        assert_eq!("[Au][Au]\t\n", result_str, "output string did not match expected");
+        assert_eq!(
+            "[Au][Au]\t\n", result_str,
+            "output string did not match expected"
+        );
     }
 
     #[test]
     fn test_supported_formats() {
         let supported_formats = ob::OBConversion_get_supported_input_format();
-        assert_eq!(supported_formats.len(), 22, "wrong amount of supported input formats");
+        assert_eq!(
+            supported_formats.len(),
+            22,
+            "wrong amount of supported input formats"
+        );
 
         let supported_formats = ob::OBConversion_get_supported_output_format();
-        assert_eq!(supported_formats.len(), 15, "wrong amount of supported output formats");
+        assert_eq!(
+            supported_formats.len(),
+            15,
+            "wrong amount of supported output formats"
+        );
     }
 
     #[test]
@@ -187,7 +200,11 @@ H     -1.58481    0.37474    0.56475";
         let result = ob::OBConversion_read_string(&obconv, &obmol, &input);
         assert_eq!(result, 0, "unable to read molecule");
 
-        assert_eq!(ob::OBMol_get_formula(&obmol), "CH4", "wrong chemical formula");
+        assert_eq!(
+            ob::OBMol_get_formula(&obmol),
+            "CH4",
+            "wrong chemical formula"
+        );
     }
 
     #[test]
@@ -211,9 +228,16 @@ H     -1.58481    0.37474    0.56475";
         let result = ob::OBConversion_read_string(&obconv, &obmol, &input);
         assert_eq!(result, 0, "unable to read molecule");
 
-        let correct_coords = vec![-0.7475, 0.02136, -0.0, 0.05249, -0.22702, 0.66574, -0.4249, 0.78569, -0.67574, -1.03279, -0.84799, -0.55475, -1.58481, 0.37474, 0.56475];
+        let correct_coords = vec![
+            -0.7475, 0.02136, -0.0, 0.05249, -0.22702, 0.66574, -0.4249, 0.78569, -0.67574,
+            -1.03279, -0.84799, -0.55475, -1.58481, 0.37474, 0.56475,
+        ];
         let ob_coordinates = ob::OBMol_get_coordinates(&obmol);
-        let matching = correct_coords.iter().zip(&ob_coordinates).filter(|&(a, b)| a == b).count();
+        let matching = correct_coords
+            .iter()
+            .zip(&ob_coordinates)
+            .filter(|&(a, b)| a == b)
+            .count();
 
         assert_eq!(matching, 15, "read coordinates wrong");
     }

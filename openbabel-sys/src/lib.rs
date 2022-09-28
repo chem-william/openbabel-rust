@@ -1,6 +1,6 @@
 //!
 //!  OpenBabel Rust Bindings
-//! 
+//!
 //!
 //! OBConversion
 //! ------------
@@ -24,7 +24,7 @@
 //! OBMol_get_formula <-> OBMol::GetFormula
 //! OBMol_get_energy <-> OBMol::GetEnergy
 //! OBMol_get_coordinates <-> OBMol::GetCoordinates
-//! 
+//!
 //!
 //! OBForceField
 //! ------------
@@ -37,17 +37,17 @@
 //! OBForceField_steepest_descent_initialize <-> OBForceField::SteepestDescentInitialize
 //! OBForceField_steepest_descent_take_n_steps <-> OBForceField::SteepestDescentTakeNSteps
 //! OBForceField_energy <-> OBForceField::Energy
-//! 
+//!
 //!  
 //! OBFingerprint
 //! -------------
 //! OBFingerprint_get_fingerprint <-> OBFingerprint::GetFingerprint
-//! 
-//! 
-//! 
+//!
+//!
+//!
 //! OBSmartsPattern
 //! ---------------
-//! 
+//!
 //! OBSmartsPattern_from_smarts <-> OBSmartsPattern::Init
 //! OBSmartsPattern_num_atoms <-> OBSmartsPattern::NumAtoms
 //! OBSmartsPattern_num_bonds <-> OBSmartsPattern::NumBonds
@@ -69,12 +69,33 @@ pub mod ob {
         // OBConversion
         // fn OBConversion_smi_to_mol(smiles: &CxxString) -> UniquePtr<OBMol>;
         fn OBConversion_new() -> UniquePtr<OBConversion>;
-        fn OBConversion_set_in_format(conv: &UniquePtr<OBConversion>, input_format: &CxxString) -> u32;
-        fn OBConversion_set_out_format(conv: &UniquePtr<OBConversion>, output_format: &CxxString) -> u32;
-        fn OBConversion_set_in_and_out_formats(conv: &UniquePtr<OBConversion>, input_format: &CxxString, output_format: &CxxString) -> u32;
-        fn OBConversion_read_string(conv: &UniquePtr<OBConversion>, mol: &UniquePtr<OBMol>, input: &CxxString) -> u32;
-        fn OBConversion_write_string(conv: &UniquePtr<OBConversion>, mol: &UniquePtr<OBMol>) -> String;
-        fn OBConversion_read_file(conv: &UniquePtr<OBConversion>, mol: &UniquePtr<OBMol>, input_path: &CxxString) -> u32;
+        fn OBConversion_set_in_format(
+            conv: &UniquePtr<OBConversion>,
+            input_format: &CxxString,
+        ) -> u32;
+        fn OBConversion_set_out_format(
+            conv: &UniquePtr<OBConversion>,
+            output_format: &CxxString,
+        ) -> u32;
+        fn OBConversion_set_in_and_out_formats(
+            conv: &UniquePtr<OBConversion>,
+            input_format: &CxxString,
+            output_format: &CxxString,
+        ) -> u32;
+        fn OBConversion_read_string(
+            conv: &UniquePtr<OBConversion>,
+            mol: &UniquePtr<OBMol>,
+            input: &CxxString,
+        ) -> u32;
+        fn OBConversion_write_string(
+            conv: &UniquePtr<OBConversion>,
+            mol: &UniquePtr<OBMol>,
+        ) -> String;
+        fn OBConversion_read_file(
+            conv: &UniquePtr<OBConversion>,
+            mol: &UniquePtr<OBMol>,
+            input_path: &CxxString,
+        ) -> u32;
         fn OBConversion_get_supported_input_format() -> Vec<String>;
         fn OBConversion_get_supported_output_format() -> Vec<String>;
 
@@ -82,11 +103,25 @@ pub mod ob {
         fn OBForceField_find_forcefield(ff_name: &CxxString) -> *mut OBForceField;
         unsafe fn OBForceField_setup(mol: &UniquePtr<OBMol>, pFF: *mut OBForceField) -> u32;
         unsafe fn OBForceField_conjugate_gradients(pFF: *mut OBForceField, steps: u32, econv: f64);
-        unsafe fn OBForceField_conjugate_gradients_initialize(pFF: *mut OBForceField, steps: u32, econv: f64);
-        unsafe fn OBForceField_conjugate_gradients_take_n_steps(pFF: *mut OBForceField, n: u32) -> bool;
+        unsafe fn OBForceField_conjugate_gradients_initialize(
+            pFF: *mut OBForceField,
+            steps: u32,
+            econv: f64,
+        );
+        unsafe fn OBForceField_conjugate_gradients_take_n_steps(
+            pFF: *mut OBForceField,
+            n: u32,
+        ) -> bool;
         unsafe fn OBForceField_steepest_descent(pFF: *mut OBForceField, steps: u32, econv: f64);
-        unsafe fn OBForceField_steepest_descent_initialize(pFF: *mut OBForceField, steps: u32, econv: f64);
-        unsafe fn OBForceField_steepest_descent_take_n_steps(pFF: *mut OBForceField, n: u32) -> bool;
+        unsafe fn OBForceField_steepest_descent_initialize(
+            pFF: *mut OBForceField,
+            steps: u32,
+            econv: f64,
+        );
+        unsafe fn OBForceField_steepest_descent_take_n_steps(
+            pFF: *mut OBForceField,
+            n: u32,
+        ) -> bool;
         unsafe fn OBForceField_energy(pFF: *mut OBForceField) -> f64;
 
         // OBMol
@@ -102,16 +137,22 @@ pub mod ob {
         fn OBMol_get_coordinates(mol: &UniquePtr<OBMol>) -> Vec<f64>;
 
         // OBFingerprint
-        fn OBFingerprint_get_fingerprint(fp_name: &CxxString, mol: &UniquePtr<OBMol>, nbits: u32) -> UniquePtr<CxxVector<u32>>;
+        fn OBFingerprint_get_fingerprint(
+            fp_name: &CxxString,
+            mol: &UniquePtr<OBMol>,
+            nbits: u32,
+        ) -> UniquePtr<CxxVector<u32>>;
 
         // OBSmartsPattern
         fn OBSmartsPattern_from_smarts(smarts: &CxxString) -> UniquePtr<OBSmartsPattern>;
         fn OBSmartsPattern_num_atoms(pattern: &UniquePtr<OBSmartsPattern>) -> u32;
         fn OBSmartsPattern_num_bonds(pattern: &UniquePtr<OBSmartsPattern>) -> u32;
         fn OBSmartsPattern_num_matches(pattern: &UniquePtr<OBSmartsPattern>) -> u32;
-        fn OBSmartsPattern_match(pattern: &UniquePtr<OBSmartsPattern>, mol: &UniquePtr<OBMol>) -> UniquePtr<CxxVector<i32>>;
+        fn OBSmartsPattern_match(
+            pattern: &UniquePtr<OBSmartsPattern>,
+            mol: &UniquePtr<OBMol>,
+        ) -> UniquePtr<CxxVector<i32>>;
     }
 }
-
 
 mod tests;
