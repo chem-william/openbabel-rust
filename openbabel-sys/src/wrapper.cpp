@@ -10,22 +10,22 @@ namespace OpenBabel {
 
 // OBConversion 
 
-// std::unique_ptr<OBMol> OBConversion_smi_to_mol(const std::string &smiles) {
+// unique_ptr<OBMol> OBConversion_smi_to_mol(const string &smiles) {
 //     OBSmilesParser ob_sp = OBSmilesParser();
 //     OBMol mol = OBMol();
 //     if (ob_sp.SmiToMol(mol, smiles)) {
-//         return std::make_unique<OBMol>(std::move(mol));
+//         return make_unique<OBMol>(move(mol));
 //     } else {
-//         return std::unique_ptr<OBMol>(nullptr);
+//         return unique_ptr<OBMol>(nullptr);
 //     }
 // }
 
-unsigned int OBConversion_set_in_format(const std::unique_ptr<OBConversion> & pConv, const std::string &input_format) {
+unsigned int OBConversion_set_in_format(const unique_ptr<OBConversion> & pConv, const string &input_format) {
     OBFormat* pFormat = OBConversion::FindFormat(input_format);
 
     if (!pConv.get()->SetInFormat(pFormat)) {
-	std::stringstream errorMsg;
-        errorMsg << "OBConversion::SetInFormat(" << input_format << ")" << std::endl;
+	stringstream errorMsg;
+        errorMsg << "OBConversion::SetInFormat(" << input_format << ")" << endl;
         obErrorLog.ThrowError(__FUNCTION__, errorMsg.str(), obError);
         return 1;
     }
@@ -33,12 +33,12 @@ unsigned int OBConversion_set_in_format(const std::unique_ptr<OBConversion> & pC
     return 0;
 }
 
-unsigned int OBConversion_set_out_format(const std::unique_ptr<OBConversion> & pConv, const std::string &output_format) {
+unsigned int OBConversion_set_out_format(const unique_ptr<OBConversion> & pConv, const string &output_format) {
     OBFormat* pFormat = OBConversion::FindFormat(output_format);
 
     if (!pConv.get()->SetOutFormat(pFormat)) {
-	std::stringstream errorMsg;
-        errorMsg << "OBConversion::SetOutFormat(" << output_format << ")" << std::endl;
+	stringstream errorMsg;
+        errorMsg << "OBConversion::SetOutFormat(" << output_format << ")" << endl;
         obErrorLog.ThrowError(__FUNCTION__, errorMsg.str(), obError);
         return 1;
     }
@@ -46,13 +46,13 @@ unsigned int OBConversion_set_out_format(const std::unique_ptr<OBConversion> & p
     return 0;
 }
 
-unsigned int OBConversion_set_in_and_out_formats(const std::unique_ptr<OBConversion> & pConv, const std::string &input_format, const std::string &output_format) {
+unsigned int OBConversion_set_in_and_out_formats(const unique_ptr<OBConversion> & pConv, const string &input_format, const string &output_format) {
     OBFormat* pInFormat = OBConversion::FindFormat(input_format);
     OBFormat* pOutFormat = OBConversion::FindFormat(output_format);
 
     if (!pConv.get()->SetInAndOutFormats(pInFormat, pOutFormat)) {
-	std::stringstream errorMsg;
-        errorMsg << "OBConversion::SetInAndOutFormats(" << output_format << ")" << std::endl;
+	stringstream errorMsg;
+        errorMsg << "OBConversion::SetInAndOutFormats(" << output_format << ")" << endl;
         obErrorLog.ThrowError(__FUNCTION__, errorMsg.str(), obError);
         return 1;
     }
@@ -60,24 +60,24 @@ unsigned int OBConversion_set_in_and_out_formats(const std::unique_ptr<OBConvers
     return 0;
 }
 
-unsigned int OBConversion_read_string(const std::unique_ptr<OBConversion> & pConv, const std::unique_ptr<OBMol> & pMol, const std::string &input) {
+unsigned int OBConversion_read_string(const unique_ptr<OBConversion> & pConv, const unique_ptr<OBMol> & pMol, const string &input) {
     if (!pConv.get()->ReadString(pMol.get(), input.c_str())) {
-        std::stringstream errorMsg;
-        errorMsg << "OBConversion::ReadString error" << std::endl;
+        stringstream errorMsg;
+        errorMsg << "OBConversion::ReadString error" << endl;
         obErrorLog.ThrowError(__FUNCTION__, errorMsg.str(), obError);
 	return 1;
     }
     return 0;
 }
 
-rust::String OBConversion_write_string(const std::unique_ptr<OBConversion> & pConv, const std::unique_ptr<OBMol> & pMol) {
+rust::String OBConversion_write_string(const unique_ptr<OBConversion> & pConv, const unique_ptr<OBMol> & pMol) {
     return pConv.get()->WriteString(pMol.get());
 }
 
-unsigned int OBConversion_read_file(const std::unique_ptr<OBConversion> & pConv, const std::unique_ptr<OBMol> & pMol, const std::string &input_path) {
+unsigned int OBConversion_read_file(const unique_ptr<OBConversion> & pConv, const unique_ptr<OBMol> & pMol, const string &input_path) {
     if (!pConv.get()->ReadFile(pMol.get(), input_path)) {
-        std::stringstream errorMsg;
-        errorMsg << "OBConversion::ReadFile error" << std::endl;
+        stringstream errorMsg;
+        errorMsg << "OBConversion::ReadFile error" << endl;
         obErrorLog.ThrowError(__FUNCTION__, errorMsg.str(), obError);
 	return 1;
     }
@@ -105,22 +105,22 @@ rust::Vec<rust::String> OBConversion_get_supported_output_format() {
 // OBConversion - End
 
 // OBForceField
-OBForceField* OBForceField_find_forcefield(const std::string &ff_name) {
+OBForceField* OBForceField_find_forcefield(const string &ff_name) {
     OBForceField* pFF = OBForceField::FindForceField(ff_name.c_str());
 
     if (!pFF) {
-        std::stringstream errorMsg;
-	errorMsg << "OBForceField::FindForceField error" << std::endl;
+        stringstream errorMsg;
+	errorMsg << "OBForceField::FindForceField error" << endl;
 	obErrorLog.ThrowError(__FUNCTION__, errorMsg.str(), obError);
     }
 
     return pFF;
 }
 
-unsigned int OBForceField_setup(const std::unique_ptr<OBMol> & pMol, OBForceField* pFF) {
+unsigned int OBForceField_setup(const unique_ptr<OBMol> & pMol, OBForceField* pFF) {
     if (!pFF->Setup(*pMol)) {
-        std::stringstream errorMsg;
-	errorMsg << "OBForceField->Setup() error" << std::endl;
+        stringstream errorMsg;
+	errorMsg << "OBForceField->Setup() error" << endl;
 	obErrorLog.ThrowError(__FUNCTION__, errorMsg.str(), obError);
 	return 1;
     }
@@ -152,64 +152,64 @@ bool OBForceField_steepest_descent_take_n_steps(OBForceField* pFF, u_int32_t n) 
 }
 
 double OBForceField_energy(OBForceField* pFF) { return pFF->Energy(); }
-const std::string OBForceField_get_unit(OBForceField* pFF) { return pFF->GetUnit(); }
+const string OBForceField_get_unit(OBForceField* pFF) { return pFF->GetUnit(); }
 
 // OBForceField End
 
 
 // OBMol
-std::unique_ptr<OBMol> OBMol_new() { return std::unique_ptr<OBMol>(new OBMol()); }
-std::unique_ptr<OBConversion> OBConversion_new() { return std::unique_ptr<OBConversion>(new OBConversion()); }
-std::unique_ptr<OBMol> OBMol_from_smiles(const std::string &smiles) {
-    std::unique_ptr<OBMol> pMol(new OBMol());
-    std::stringstream ss(smiles);
+unique_ptr<OBMol> OBMol_new() { return unique_ptr<OBMol>(new OBMol()); }
+unique_ptr<OBConversion> OBConversion_new() { return unique_ptr<OBConversion>(new OBConversion()); }
+unique_ptr<OBMol> OBMol_from_smiles(const string &smiles) {
+    unique_ptr<OBMol> pMol(new OBMol());
+    stringstream ss(smiles);
     OBConversion conv(&ss);
 
     if (!conv.SetInFormat("smi")) {
-        std::stringstream errorMsg;
-        errorMsg << "OBConversion::SetInFormat (\"smi\")  error" << std::endl;
+        stringstream errorMsg;
+        errorMsg << "OBConversion::SetInFormat (\"smi\")  error" << endl;
         obErrorLog.ThrowError(__FUNCTION__, errorMsg.str(), obError);
     }
 
     if(!conv.Read(pMol.get())) {
-        std::stringstream errorMsg;
-        errorMsg << "OBConversion::Read error" << std::endl;
+        stringstream errorMsg;
+        errorMsg << "OBConversion::Read error" << endl;
         obErrorLog.ThrowError(__FUNCTION__, errorMsg.str(), obError);
-        return std::unique_ptr<OBMol>(nullptr);
+        return unique_ptr<OBMol>(nullptr);
     } 
 
     return pMol;
 }
 
-unsigned int OBMol_num_atoms(const std::unique_ptr<OBMol> & pMol) { return pMol->NumAtoms(); }
-unsigned int OBMol_num_bonds(const std::unique_ptr<OBMol> & pMol) { return pMol->NumBonds(); }
-unsigned int OBMol_num_hvy_atoms(const std::unique_ptr<OBMol> & pMol) { return pMol->NumHvyAtoms(); }
-double OBMol_get_mol_wt(const std::unique_ptr<OBMol> & pMol) { return pMol->GetMolWt(); }
+unsigned int OBMol_num_atoms(const unique_ptr<OBMol> & pMol) { return pMol->NumAtoms(); }
+unsigned int OBMol_num_bonds(const unique_ptr<OBMol> & pMol) { return pMol->NumBonds(); }
+unsigned int OBMol_num_hvy_atoms(const unique_ptr<OBMol> & pMol) { return pMol->NumHvyAtoms(); }
+double OBMol_get_mol_wt(const unique_ptr<OBMol> & pMol) { return pMol->GetMolWt(); }
 
 // OBMol End
 
 // OBFingerprint
 
-std::unique_ptr<FPData> OBFingerprint_get_fingerprint(const std::string &fp_name, const std::unique_ptr<OBMol> & pMol, u_int32_t nbits) {
+unique_ptr<FPData> OBFingerprint_get_fingerprint(const string &fp_name, const unique_ptr<OBMol> & pMol, u_int32_t nbits) {
     FPData fps;
     fps.resize(nbits / 32);
     OBFingerprint* pFP = OBFingerprint::FindFingerprint(fp_name.c_str());
 
     if (!pFP) {
-        std::stringstream errorMsg;
-        errorMsg << "Cannot find fingerprint " << fp_name << std::endl;
+        stringstream errorMsg;
+        errorMsg << "Cannot find fingerprint " << fp_name << endl;
         obErrorLog.ThrowError(__FUNCTION__, errorMsg.str(), obError);
-        std::fill(fps.begin(), fps.end(), 0);
+        fill(fps.begin(), fps.end(), 0);
     } else {
         if(!pFP->GetFingerprint(pMol.get(), fps, nbits)) {
-            std::stringstream errorMsg;
-            errorMsg << "Error on generating fingerprint " << fp_name << std::endl;
+            stringstream errorMsg;
+            errorMsg << "Error on generating fingerprint " << fp_name << endl;
             obErrorLog.ThrowError(__FUNCTION__, errorMsg.str(), obError);
-            std::fill(fps.begin(), fps.end(), 0);
+            fill(fps.begin(), fps.end(), 0);
         }
     }
 
-    return std::make_unique<FPData>(std::move(fps));
+    return make_unique<FPData>(move(fps));
 }
 
 // OBFingerprint - End
@@ -217,25 +217,25 @@ std::unique_ptr<FPData> OBFingerprint_get_fingerprint(const std::string &fp_name
 
 // OBSmartsPattern
 
-std::unique_ptr<OBSmartsPattern> OBSmartsPattern_from_smarts(const std::string &smarts) {
-    std::unique_ptr<OBSmartsPattern> pSP(new OBSmartsPattern());
+unique_ptr<OBSmartsPattern> OBSmartsPattern_from_smarts(const string &smarts) {
+    unique_ptr<OBSmartsPattern> pSP(new OBSmartsPattern());
     pSP->Init(smarts);
     return pSP;
 }
 
-unsigned int OBSmartsPattern_num_atoms(const std::unique_ptr<OBSmartsPattern> & pSP) { return pSP->NumAtoms(); }
-unsigned int OBSmartsPattern_num_bonds(const std::unique_ptr<OBSmartsPattern> & pSP) { return pSP->NumBonds(); }
-unsigned int OBSmartsPattern_num_matches(const std::unique_ptr<OBSmartsPattern> & pSP) { return pSP->NumMatches(); }
+unsigned int OBSmartsPattern_num_atoms(const unique_ptr<OBSmartsPattern> & pSP) { return pSP->NumAtoms(); }
+unsigned int OBSmartsPattern_num_bonds(const unique_ptr<OBSmartsPattern> & pSP) { return pSP->NumBonds(); }
+unsigned int OBSmartsPattern_num_matches(const unique_ptr<OBSmartsPattern> & pSP) { return pSP->NumMatches(); }
 
-std::unique_ptr<std::vector<int>> OBSmartsPattern_match(const std::unique_ptr<OBSmartsPattern> & pSP, const std::unique_ptr<OBMol> & pMol) {
+unique_ptr<vector<int>> OBSmartsPattern_match(const unique_ptr<OBSmartsPattern> & pSP, const unique_ptr<OBMol> & pMol) {
     pSP->Match(*pMol);
-    // CxxVector does not support nested C++ vector (std::vector<std::vector>)
-    std::vector<int> result {};
-    for (std::vector<std::vector<int>>::iterator i = pSP->GetMapList().begin(); i != pSP->GetMapList().end(); ++i) {
+    // CxxVector does not support nested C++ vector (vector<vector>)
+    vector<int> result {};
+    for (vector<vector<int>>::iterator i = pSP->GetMapList().begin(); i != pSP->GetMapList().end(); ++i) {
         result.insert(result.end(), i->begin(), i->end());
     }
 
-    return std::make_unique<std::vector<int>>(std::move(result));
+    return make_unique<vector<int>>(move(result));
 }
 
 // OBSmartsPattern - End
