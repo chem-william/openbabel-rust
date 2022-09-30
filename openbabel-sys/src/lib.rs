@@ -37,6 +37,7 @@
 //! OBForceField_steepest_descent_initialize <-> OBForceField::SteepestDescentInitialize
 //! OBForceField_steepest_descent_take_n_steps <-> OBForceField::SteepestDescentTakeNSteps
 //! OBForceField_energy <-> OBForceField::Energy
+//! OBForceField_is_setup_needed <-> OBForceField::IsSetupNeeded
 //!
 //!  
 //! OBFingerprint
@@ -100,29 +101,33 @@ pub mod ob {
         fn OBConversion_get_supported_output_format() -> Vec<String>;
 
         // OBForceField
-        fn OBForceField_find_forcefield(ff_name: &CxxString) -> *mut OBForceField;
-        unsafe fn OBForceField_setup(mol: &UniquePtr<OBMol>, pFF: *mut OBForceField) -> u32;
-        unsafe fn OBForceField_conjugate_gradients(pFF: *mut OBForceField, steps: u32, econv: f64);
-        unsafe fn OBForceField_conjugate_gradients_initialize(
-            pFF: *mut OBForceField,
+        fn OBForceField_find_forcefield(ff_name: &CxxString) -> UniquePtr<OBForceField>;
+        fn OBForceField_setup(mol: &UniquePtr<OBMol>, pFF: &UniquePtr<OBForceField>) -> u32;
+        fn OBForceField_conjugate_gradients(pFF: &UniquePtr<OBForceField>, steps: u32, econv: f64);
+        fn OBForceField_conjugate_gradients_initialize(
+            pFF: &UniquePtr<OBForceField>,
             steps: u32,
             econv: f64,
         );
-        unsafe fn OBForceField_conjugate_gradients_take_n_steps(
-            pFF: *mut OBForceField,
+        fn OBForceField_conjugate_gradients_take_n_steps(
+            pFF: &UniquePtr<OBForceField>,
             n: u32,
         ) -> bool;
-        unsafe fn OBForceField_steepest_descent(pFF: *mut OBForceField, steps: u32, econv: f64);
-        unsafe fn OBForceField_steepest_descent_initialize(
-            pFF: *mut OBForceField,
+        fn OBForceField_steepest_descent(pFF: &UniquePtr<OBForceField>, steps: u32, econv: f64);
+        fn OBForceField_steepest_descent_initialize(
+            pFF: &UniquePtr<OBForceField>,
             steps: u32,
             econv: f64,
         );
-        unsafe fn OBForceField_steepest_descent_take_n_steps(
-            pFF: *mut OBForceField,
+        fn OBForceField_steepest_descent_take_n_steps(
+            pFF: &UniquePtr<OBForceField>,
             n: u32,
         ) -> bool;
-        unsafe fn OBForceField_energy(pFF: *mut OBForceField) -> f64;
+        fn OBForceField_energy(pFF: &UniquePtr<OBForceField>) -> f64;
+        fn OBForceField_is_setup_needed(
+            pFF: &UniquePtr<OBForceField>,
+            mol: &UniquePtr<OBMol>,
+        ) -> bool;
 
         // OBMol
         fn OBMol_new() -> UniquePtr<OBMol>;

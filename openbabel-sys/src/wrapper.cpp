@@ -105,20 +105,21 @@ rust::Vec<rust::String> OBConversion_get_supported_output_format() {
 // OBConversion - End
 
 // OBForceField
-OBForceField* OBForceField_find_forcefield(const string &ff_name) {
-    OBForceField* pFF = OBForceField::FindForceField(ff_name.c_str());
+unique_ptr<OBForceField> OBForceField_find_forcefield(const string &ff_name) {
+    OBForceField* raw_ff = OBForceField::FindForceField(ff_name.c_str());
+    unique_ptr<OBForceField> p_ff(raw_ff->MakeNewInstance());
 
-    if (!pFF) {
+    if (!p_ff) {
         stringstream errorMsg;
 	errorMsg << "OBForceField::FindForceField error" << endl;
 	obErrorLog.ThrowError(__FUNCTION__, errorMsg.str(), obError);
     }
 
-    return pFF;
+    return p_ff;
 }
 
-unsigned int OBForceField_setup(const unique_ptr<OBMol> & pMol, OBForceField* pFF) {
-    if (!pFF->Setup(*pMol)) {
+unsigned int OBForceField_setup(const unique_ptr<OBMol> & pMol, const unique_ptr<OBForceField> & pFF) {
+    if (!pFF.get()->Setup(*pMol)) {
         stringstream errorMsg;
 	errorMsg << "OBForceField->Setup() error" << endl;
 	obErrorLog.ThrowError(__FUNCTION__, errorMsg.str(), obError);
@@ -127,32 +128,33 @@ unsigned int OBForceField_setup(const unique_ptr<OBMol> & pMol, OBForceField* pF
     return 0;
 }
 
-void OBForceField_conjugate_gradients(OBForceField* pFF, u_int32_t steps, double econv) {
-    pFF->ConjugateGradients(steps, econv);
+void OBForceField_conjugate_gradients(const unique_ptr<OBForceField> & pFF, u_int32_t steps, double econv) {
+    pFF.get()->ConjugateGradients(steps, econv);
 }
 
-void OBForceField_conjugate_gradients_initialize(OBForceField* pFF, u_int32_t steps, double econv) {
-    pFF->ConjugateGradientsInitialize(steps, econv);
+void OBForceField_conjugate_gradients_initialize(const unique_ptr<OBForceField> & pFF, u_int32_t steps, double econv) {
+    pFF.get()->ConjugateGradientsInitialize(steps, econv);
 }
 
-bool OBForceField_conjugate_gradients_take_n_steps(OBForceField* pFF, u_int32_t n) {
-    return pFF->ConjugateGradientsTakeNSteps(n);
+bool OBForceField_conjugate_gradients_take_n_steps(const unique_ptr<OBForceField> & pFF, u_int32_t n) {
+    return pFF.get()->ConjugateGradientsTakeNSteps(n);
 }
 
-void OBForceField_steepest_descent(OBForceField* pFF, u_int32_t steps, double econv) {
-    pFF->SteepestDescent(steps, econv);
+void OBForceField_steepest_descent(const unique_ptr<OBForceField> & pFF, u_int32_t steps, double econv) {
+    pFF.get()->SteepestDescent(steps, econv);
 }
 
-void OBForceField_steepest_descent_initialize(OBForceField* pFF, u_int32_t steps, double econv) {
-    pFF->SteepestDescentInitialize(steps, econv);
+void OBForceField_steepest_descent_initialize(const unique_ptr<OBForceField> & pFF, u_int32_t steps, double econv) {
+    pFF.get()->SteepestDescentInitialize(steps, econv);
 }
 
-bool OBForceField_steepest_descent_take_n_steps(OBForceField* pFF, u_int32_t n) {
-    return pFF->SteepestDescentTakeNSteps(n);
+bool OBForceField_steepest_descent_take_n_steps(const unique_ptr<OBForceField> & pFF, u_int32_t n) {
+    return pFF.get()->SteepestDescentTakeNSteps(n);
 }
 
-double OBForceField_energy(OBForceField* pFF) { return pFF->Energy(); }
-const string OBForceField_get_unit(OBForceField* pFF) { return pFF->GetUnit(); }
+double OBForceField_energy(const unique_ptr<OBForceField> & pFF) { return pFF.get()->Energy(); }
+bool OBForceField_is_setup_needed(const unique_ptr<OBForceField> & pFF, const unique_ptr<OBMol> & pMol) { return pFF.get()->IsSetupNeeded(*pMol); }
+const string OBForceField_get_unit(const unique_ptr<OBForceField> & pFF) { return pFF.get()->GetUnit(); }
 
 // OBForceField End
 

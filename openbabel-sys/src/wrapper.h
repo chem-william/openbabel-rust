@@ -30,16 +30,17 @@ namespace OpenBabel {
 
 
     // OBForceField
-    OBForceField* OBForceField_find_forcefield(const string &ff_name);
-    unsigned int OBForceField_setup(const unique_ptr<OBMol> & pMol, OBForceField* pFF);
-    void OBForceField_conjugate_gradients(OBForceField* pFF, u_int32_t steps, double econv);
-    void OBForceField_conjugate_gradients_initialize(OBForceField* pFF, u_int32_t steps, double econv);
-    bool OBForceField_conjugate_gradients_take_n_steps(OBForceField* pFF, u_int32_t n);
+    unique_ptr<OBForceField> OBForceField_find_forcefield(const string &ff_name);
+    unsigned int OBForceField_setup(const unique_ptr<OBMol> & pMol, const unique_ptr<OBForceField> & pFF);
+    void OBForceField_conjugate_gradients(const unique_ptr<OBForceField> & pFF, u_int32_t steps, double econv);
+    void OBForceField_conjugate_gradients_initialize(const unique_ptr<OBForceField> & pFF, u_int32_t steps, double econv);
+    bool OBForceField_conjugate_gradients_take_n_steps(const unique_ptr<OBForceField> & pFF, u_int32_t n);
 
-    void OBForceField_steepest_descent(OBForceField* pFF, u_int32_t steps, double econv);
-    void OBForceField_steepest_descent_initialize(OBForceField* pFF, u_int32_t steps, double econv);
-    bool OBForceField_steepest_descent_take_n_steps(OBForceField* pFF, u_int32_t n);
-    double OBForceField_energy(OBForceField* pFF);
+    void OBForceField_steepest_descent(const unique_ptr<OBForceField> & pFF, u_int32_t steps, double econv);
+    void OBForceField_steepest_descent_initialize(const unique_ptr<OBForceField> & pFF, u_int32_t steps, double econv);
+    bool OBForceField_steepest_descent_take_n_steps(const unique_ptr<OBForceField> & pFF, u_int32_t n);
+    double OBForceField_energy(const unique_ptr<OBForceField> & pFF);
+    bool OBForceField_is_setup_needed(const unique_ptr<OBForceField> & pFF, const unique_ptr<OBMol> & pMol);
 
 
     // OBMol
