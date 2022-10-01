@@ -16,7 +16,7 @@ mod test {
         };
     }
 
-    # [test]
+    #[test]
     fn test_mol() {
         let test_data: Vec<(String, (u32, u32, u32, f64))> = vec![
             (String::from("c1ccccc1N"), (7, 7, 7, 93.126)),
