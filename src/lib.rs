@@ -1,3 +1,8 @@
+pub mod conversion;
+pub mod fingerprint;
+pub mod forcefields;
+pub mod molecule;
+pub mod smartspattern;
 pub mod utils;
 pub mod molecule;
 pub mod fingerprint;
